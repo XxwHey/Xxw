@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+    <security:http auto-config="true">
+        <!-- 拦截资源请求以验证权限 -->
+        <security:intercept-url pattern="/static/login/**" access="permitAll"/>
+        <security:intercept-url pattern="/oauth/**" access="permitAll"/>
+        <security:intercept-url pattern="/j_spring_security**" access="permitAll"/>
+        <security:intercept-url pattern="/static/resource/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/user/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <!-- 自定义登录表单 -->
+        <security:form-login login-page="/static/html/login/login.html" login-processing-url="/j_spring_security_check"
+                             authentication-failure-url="/static/html/login/login.html?error=true"
+                             authentication-success-handler-ref="oauthSuccessHandler"
+                             username-parameter="username" password-parameter="password"/>
+        <security:logout logout-url="/j_spring_security_logout" logout-success-url="/static/html/login/logout.html"/>
+        <!-- 拒绝访问处理 -->
+        <security:access-denied-handler error-page="/static/html/error/denied.html"/>
+        <!-- 跨站请求伪造 -->
+        <security:csrf disabled="true"/>
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="userDetailsService"/>
+    </security:authentication-manager>
+
+    <bean id="userDetailsService" class="common.security.UserDetailsServiceImpl"/>
+
+    <!-- 验证成功处理 -->
+    <bean id="oauthSuccessHandler" class="common.security.OauthSuccessHandlerImpl"/>
+
+</beans>

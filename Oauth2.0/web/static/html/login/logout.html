@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登出页面</title>
+</head>
+<body>
+<p>登出成功，3秒后跳转至登录页面</p>
+<script>
+    var time = 2;
+    var timer =  setInterval(function () {
+        if (time > 0) {
+            document.getElementsByTagName("p")[0].innerHTML = "登出成功，" + time + "秒后跳转至登录页面";
+            time--;
+        } else {
+            clearInterval(timer);
+            location.href = "/static/html/login/login.html";
+        }
+    }, 1000);
+</script>
+</body>
+</html>

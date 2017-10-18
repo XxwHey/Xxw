@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script type="text/javascript" src="../../common/jQuery/jquery.min.js"></script>
+</head>
+<body>
+<div>
+    <span>你好，</span>
+    <span id="name"></span>
+</div>
+<button type="button" id="logout" onclick="location.href = '/j_spring_security_logout'">退出登录</button>
+<script>
+    window.onload = function () {
+        $.ajax({
+            type: "post",
+            url: "/login/userInfo.do",
+            dataType: "json",
+            success: function (j) {
+                var user = j.data;
+                alert(JSON.stringify(user));
+                $("#name").html(user.username);
+//                if (user.name) {
+//                    document.getElementById("name").innerHTML = user.name;
+//                } else {
+//                    document.getElementById("name").innerHTML = user.nickname;
+//                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

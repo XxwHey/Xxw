@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <script type="text/javascript" src="../../common/jQuery/jquery.min.js"></script>
+</head>
+<body>
+<form method="post" action="/j_spring_security_check">
+    <div>
+        <span>用户名：</span>
+        <input name="username" placeholder="username" type="text" id="username">
+        <br>
+        <span>密码：</span>
+        <input name="password" placeholder="password" type="text" id="password">
+        <button type="button" id="login">登录</button>
+    </div>
+    <div>
+        <button type="button" id="Weibo">微博登录</button>
+    </div>
+    <div>
+        <button type="button" id="QQ">QQ登录</button>
+    </div>
+    <div>
+        <button type="button" id="WeChat">微信登录</button>
+    </div>
+</form>
+<div id="notice"></div>
+<script type="text/javascript">
+    $("#login").click(function () {
+        $.ajax({
+            type: "post",
+            url: "/j_spring_security_check",
+            dataType: "json",
+            data: {
+                "username" : $("#username").val(),
+                "password" : $("#password").val()
+            },
+            success: function (j) {
+                if (j.data == 1) {
+                    alert("登录成功");
+                    location.href = "/static/html/resource/home.html";
+                }
+            }
+        })
+    });
+    document.getElementById("Weibo").onclick = function () {
+//        sendTPType(this.id);
+        location.href = "https://api.weibo.com/oauth2/authorize?" +
+                "client_id=2636031874&" +
+                "response_type=code&" +
+                "redirect_uri=http://heyhey.xicp.io/oauth/getWeibo.do";
+    };
+    document.getElementById("QQ").onclick = function () {
+//        sendTPType(this.id);
+        location.href = "https://graph.qq.com/oauth2.0/authorize?" +
+                "client_id=101422669&" +
+                "response_type=code&" +
+                "redirect_uri=http://heyhey.xicp.io/oauth/getQQ.do&" +
+                "state=1";
+    };
+    document.getElementById("WeChat").onclick = function () {
+//        sendTPType(this.id);
+        location.href = "https://open.weixin.qq.com/connect/qrconnect?" +
+                "appid=wxc08d041eeb13bba4&" +
+                "redirect_uri=http://heyhey.xicp.io/oauth/getWeChat.do&" +
+                "response_type=code&" +
+                "scope=snsapi_login&" +
+                "state=1#wechat_redirect";
+    };
+//    function sendTPType(type) {
+//        HEY.ajax({
+//            type: "post",
+//            url: "oauth/getType.do",
+//            dataType: "json",
+//            data: {
+//                "type": type
+//            },
+//            complete: function () {
+//                document.getElementById("notice").innerHTML = "正在跳转至" + type + "登录...";
+//            }
+//        });
+//    }
+</script>
+</body>
+</html>
